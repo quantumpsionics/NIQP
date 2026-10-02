@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>National Institute of Quantum Psionics</title>
+    <style>
+        body {
+            background-color: #1e1e1d;
+            font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+            color: #fffed6;
+            font-size: 12px;
+        }
+        h3 {
+            color: #fed602;
+            font-size: 18px;
+        }
+        h4 {
+            font-size: 14px;
+        }
+        .date {
+            color: #9BC48A;
+        }
+        .tag {
+            color: #487ec4;
+        }
+        #air-reading {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            font-size: 10px;
+        }
+        #air-value,
+        #parallel-value {
+            color: #fed602;
+        }
+        .data-entry {
+            position: relative;
+            padding: 0.5rem 1rem;
+            margin: 1rem 0;
+        }
+        .data-entry::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 8px;
+            left: 0;
+            border: 1px solid #F2C12E;
+            border-right: none;
+        }
+        footer {
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid #F2C12E;
+            font-size: 10px;
+            text-align: center;
+        }
+        .glitch.glitching {
+            color: #fed602;
+        }
+        @media (max-width: 700px) {
+            #air-reading {
+                position: static;
+                text-align: right;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="air-reading">
+        <div>Anomalous Interference Reading (AIR): <span id="air-value"></span></div>
+        <div>Current Nearest Parallel: #<span id="parallel-value"></span></div>
+    </div>
+
+    <h3>National Institute of Quantum Psionics</h3>
+
+    <div class="data-entry">
+    <p class="date">Feb.4.25 --- 21:05:13 UTC</p>
+    <p> ****<span class="tag">#internal-update</span>****</p>
+    <p>**For Immediate Release**<br>
+<i>Entry from: NIQP Federal Office -- Neumann Buidling, Washington, DC</i><br>
+The National Institute for Quantum Psionics (NIQP) has ceased all operations beginning February 4, 2025, pursuant to a directive issued by the Department of Government Efficiency (DOGE) eliminating departmental funding previously authorized under under Section 402 of the National Quantum Initiative Act (15 U.S.C. 8801 et seq.) and Section 10104(b) of the CHIPS and Science Act of 2022 (Public Law 117-167). All Institute programs, grants, and contracts have been terminated, and remaining obligated funds are subject to review and recovery. Institute web properties have been decommissioned. A limited number of personnel have been retained at the minimum level required by law to complete grant closeout, records disposition, and response to congressional and public inquiries as needed. No further public updates will be issued.
+</p>
+    </div>
+    <div class="data-entry">
+        <p class="date">Nov.28.25 --- 08:32:01 UTC</p>
+<i>Entry from: Mountain West - District Office -- Boulder, Colorado</i><br>
+Test
+
+    </div>
+    <div class="data-entry">
+        <p class="date">Nov.28.25 --- 08:33:24 UTC</p>
+<i>Entry from: Mountain West - District Office -- Boulder, Colorado</i><br>
+Holy shit that woooorked. Hello World! Happy Thsnksgiiving. How many l000sers like me stuck drinking at the office at 1am isntead of with loved ones?? Oh just me? 
+
+    </div>
+        <div class="data-entry">
+        <p class="date">Nov.29.25 --- 23:01:55 UTC</p>
+<i>Entry from: Mountain West - District Office -- Boulder, Colorado</i><br>
+I have figured out how to post here from a terminal in the basement of our office [An old departmental/internal API is still open, god bless DOGE for an inadequate culling I guess o_O ]... but there doesn't seem to be a protocol to delete old posts. So my Thanksgiving exuberance courtesy of a few too many g&ts will now stay logged until this final vestige of NIQP collapses into the same black hole as the rest of our work. 
+
+    </div>
+
+    <footer>
+        R2Protocol Port from now lockboxed NI<span class="glitch" data-greek="Θ">Q</span>P.gov site, <span class="glitch" data-greek="α">a</span>utonomous maintenance by The E<span class="glitch" data-greek="ς">c</span>ho Committee
+    </footer>
+
+    <script>
+        const airValue = document.getElementById("air-value");
+
+        function updateAir() {
+            let digits = "2301";
+            for (let i = 0; i < 6; i++) {
+                digits += Math.floor(Math.random() * 10);
+            }
+            airValue.textContent = digits;
+            setTimeout(updateAir, 3000 + Math.random() * 2000);
+        }
+
+        updateAir();
+
+        // Parallels rotate every 18 hours, counted from a fixed start time.
+        const PARALLEL_EPOCH = Date.UTC(2026, 9, 2, 0, 0, 0);
+        const PARALLEL_PERIOD = 18 * 60 * 60 * 1000;
+        const parallelValue = document.getElementById("parallel-value");
+
+        fetch("Parallel")
+            .then(response => response.text())
+            .then(text => {
+                const parallels = text.split("\n").map(line => line.trim()).filter(Boolean);
+
+                function updateParallel() {
+                    const elapsed = Date.now() - PARALLEL_EPOCH;
+                    const period = Math.floor(elapsed / PARALLEL_PERIOD);
+                    const index = ((period % parallels.length) + parallels.length) % parallels.length;
+                    parallelValue.textContent = parallels[index];
+                    const untilNext = PARALLEL_PERIOD - (elapsed - period * PARALLEL_PERIOD);
+                    setTimeout(updateParallel, untilNext);
+                }
+
+                updateParallel();
+            });
+
+        // Each glitch letter independently flickers into its Greek counterpart.
+        document.querySelectorAll(".glitch").forEach(letter => {
+            const original = letter.textContent;
+            const greek = letter.dataset.greek;
+
+            function glitch() {
+                letter.textContent = greek;
+                letter.classList.add("glitching");
+                setTimeout(() => {
+                    letter.textContent = original;
+                    letter.classList.remove("glitching");
+                    setTimeout(glitch, 2000 + Math.random() * 7000);
+                }, 100 + Math.random() * 500);
+            }
+
+            setTimeout(glitch, 2000 + Math.random() * 7000);
+        });
+    </script>
+
+</body>
+</html>

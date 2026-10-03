@@ -80,7 +80,7 @@
         <div>Anomalous Interference Reading (AIR): <span id="air-value"></span></div>
         <div>Current Nearest Parallel: #<span id="parallel-value"></span></div>
         <div>Parallels Identified: <span class="air-stat">38</span></div>
-        <div>Parallels Explored: <span class="air-stat">0</span></div>
+        <div>Current State: <span class="air-stat" id="state-value"></span></div>
     </div>
 
     <h3>National Institute of Quantum Psionics</h3>
@@ -130,6 +130,21 @@ I have figured out how to post to this site from a terminal in the basement of o
         }
 
         updateAir();
+
+        // The current state cycles through random Greek letters every 5-25 seconds.
+        const GREEK_LETTERS = "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ";
+        const stateValue = document.getElementById("state-value");
+
+        function updateState() {
+            let letter;
+            do {
+                letter = GREEK_LETTERS[Math.floor(Math.random() * GREEK_LETTERS.length)];
+            } while (letter === stateValue.textContent);
+            stateValue.textContent = letter;
+            setTimeout(updateState, 5000 + Math.random() * 20000);
+        }
+
+        updateState();
 
         // Parallels rotate every 18 hours, counted from a fixed start time.
         const PARALLEL_EPOCH = Date.UTC(2026, 9, 2, 0, 0, 0);
